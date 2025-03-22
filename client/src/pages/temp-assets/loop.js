@@ -71,10 +71,16 @@ const LoopingWords = () => {
             <p className="looping-words__p">Sustainable Flow</p>
           </li>
           <li className="looping-words__item">
-            <p className="looping-words__p">Leak Detection</p>
+            <p className="looping-words__p">Regular FeedBack</p>
           </li>
           <li className="looping-words__item">
-            <p className="looping-words__p">Purification</p>
+            <p className="looping-words__p">Ontime Order</p>
+          </li>
+          <li className="looping-words__item">
+            <p className="looping-words__p">Clean Water</p>
+          </li>
+          <li className="looping-words__item">
+            <p className="looping-words__p">Reasonable Fare</p>
           </li>
         </ul>
       </div>

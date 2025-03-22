@@ -1,12 +1,12 @@
 /* Define color variables */
 :root {
-    --color-neutral-300: #919191; /* Light gray background */
-    --color-neutral-400: #9f9e9e; /* Slightly darker gray */
-    --color-neutral-500: #a8a8a8; /* Medium gray */
-    --color-dark: #333333; /* Dark gray (text color) */
-    --color-primary: #ff6600; /* Example primary color (orange) */
+    --color-neutral-300: rgb(91, 230, 255);
+    --color-neutral-400: rgb(91, 230, 255);
+    --color-neutral-500: rgb(91, 230, 255);
+    --color-dark: #fcfcfc;
+    --color-primary: #fffdfb;
     --size-font: 16px;
-    --container-padding: 20px;
+    --container-padding: 10px;
 }
 
 /* Apply the styles */
@@ -20,6 +20,7 @@ body {
     padding: var(--container-padding);
     justify-content: center;
     align-items: center;
+    border-radius: 10px;
     min-height: 100vh;
     display: flex;
     position: relative;
@@ -29,7 +30,7 @@ body {
     height: 2.7em;
     padding-left: 0.1em;
     padding-right: 0.1em;
-    font-size: clamp(1rem, 3vw, 2.5rem); /* Ensures text doesn't get too small or too large */
+    font-size: clamp(1rem, 3vw, 2.5rem);
     line-height: 0.9;
     position: relative;
 }
@@ -65,6 +66,7 @@ body {
       transparent 80%,
       var(--color-neutral-300) 95%
     );
+    border-radius: 7px;
     pointer-events: none;
     width: 100%;
     height: 100%;
@@ -95,8 +97,8 @@ body {
 }
   
 .looping-words__edge {
-    border-top: 0.035em solid var(--color-primary);
-    border-left: 0.035em solid var(--color-primary);
+    border-top: 0.065em solid var(--color-primary);
+    border-left: 0.065em solid var(--color-primary);
     width: 0.125em;
     height: 0.125em;
     position: absolute;
@@ -124,6 +126,7 @@ body {
 .looping-words__containers {
     width: 100%;
     height: 100%;
+    border-style: none;
     position: relative;
     overflow: hidden;
 }
@@ -143,4 +146,5 @@ body {
 /* Ensuring consistent box-sizing */
 *, *::before, *::after {
     box-sizing: border-box;
+    border-style: none;
 }

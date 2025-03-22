@@ -1,0 +1,151 @@
+/* Wrapper to avoid global conflicts */
+.todo-list-wrapper {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(43deg, #764ba2 0%, #667eea 46%, #4a60d2 100%);
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container for the todo list */
+.todo-list-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Title */
+.todo-list-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Form */
+.todo-list-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.todo-list-input,
+.todo-list-select {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1rem;
+    flex: 1;
+}
+
+.todo-list-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.todo-list-select {
+    width: 30%;
+}
+
+.todo-list-add-button {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #764ba2;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.todo-list-add-button:hover {
+    background: #667eea;
+}
+
+/* Task List */
+.todo-list-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.todo-list-li {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeIn 0.5s ease;
+}
+
+.todo-list-checkbox {
+    cursor: pointer;
+}
+
+.todo-list-task-text {
+    flex: 1;
+    color: #fff;
+}
+
+.todo-list-task-text.completed {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.todo-list-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.todo-list-edit-button,
+.todo-list-save-button,
+.todo-list-remove-button {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.todo-list-edit-button {
+    background: #667eea;
+}
+
+.todo-list-save-button {
+    background: #4a60d2;
+}
+
+.todo-list-remove-button {
+    background: #ff4d4d;
+}
+
+.todo-list-edit-button:hover,
+.todo-list-save-button:hover,
+.todo-list-remove-button:hover {
+    opacity: 0.9;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+    opacity: 0;
+    transform: translateY(-10px);
+    }
+    to {
+    opacity: 1;
+    transform: translateY(0);
+    }
+}

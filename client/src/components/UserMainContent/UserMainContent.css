@@ -1,0 +1,23 @@
+.user-main-content {
+    flex: 1;
+    /* padding: 20px; */
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    height: calc(100vh - 80px); /* Adjust based on header height */
+    display: flex;
+    /* width: 100%; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.user-main-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.user-main-content p {
+    font-size: 1.2rem;
+    color: #666;
+}

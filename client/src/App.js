@@ -4,6 +4,7 @@ import Auth from "./pages/Auth";
 import UserDashboard from "./pages/UserDashboard";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import LogoutAnimation from "./components/LogoutAnimation/LogoutAnimation"; // Import the LogoutAnimation component
 
 const isAuthenticated = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -26,10 +27,11 @@ const App = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/auth" element={<Auth />} />
+        <Route path="/logout-animation" element={<LogoutAnimation />} /> {/* Logout Animation Route */}
 
         {/* Protected Routes */}
         <Route
-          path="/user-dashboard"
+          path="/user-dashboard/*"
           element={isAuthenticated() ? <UserDashboard /> : <Navigate to="/auth" />}
         />
         <Route
@@ -37,7 +39,7 @@ const App = () => {
           element={isEmployee() ? <EmployeeDashboard /> : <Navigate to="/auth" />}
         />
         <Route
-          path="/admin-dashboard"
+          path="/admin-dashboard/*"
           element={isAdmin() ? <AdminDashboard /> : <Navigate to="/auth" />}
         />
 

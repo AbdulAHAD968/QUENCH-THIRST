@@ -1,0 +1,63 @@
+.admin-dashboard {
+    display: flex;
+    width: 100%; /* Use 100% width to fill the screen */
+    height: 100vh;
+    overflow: hidden; /* Prevent scrolling */
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 250px; /* Match the width of the sidebar */
+    transition: margin-left 0.3s ease; /* Smooth transition for sidebar toggle */
+}
+
+.main-content.sidebar-closed {
+    margin-left: 60px; /* Match the closed sidebar width */
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background: #ecf0f1;
+    overflow-y: auto; /* Allow scrolling for content */
+}
+
+.dark .content {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+/* Media Queries for Responsiveness */
+@media screen and (max-width: 768px) {
+    .main-content {
+        margin-left: 60px; /* Reduce margin for smaller screens */
+    }
+
+    .main-content.sidebar-closed {
+        margin-left: 60px; /* Keep the same margin when sidebar is closed */
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .main-content {
+        margin-left: 0; /* Remove margin for very small screens */
+    }
+
+    .sidebar {
+        width: 60px; /* Make sidebar smaller on small screens */
+    }
+
+    .sidebar.closed {
+        width: 0; /* Hide sidebar completely when closed */
+    }
+
+    .sidebar-brand h2 {
+        display: none; /* Hide brand text on small screens */
+    }
+
+    .sidebar-menu a span {
+        display: none; /* Hide menu text on small screens */
+    }
+}

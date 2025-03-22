@@ -1,0 +1,51 @@
+.users {
+    padding: 20px;
+}
+
+.users h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #0080ff;
+}
+
+.users table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #756363;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.users th,
+.users td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.users th {
+    background: #34495e;
+    color: #ecf0f1;
+    font-weight: 600;
+}
+
+.users tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.users tr:hover {
+    background: #2290bc;
+}
+
+.users button {
+    padding: 6px 12px;
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.users button:hover {
+    background: #c0392b;
+}

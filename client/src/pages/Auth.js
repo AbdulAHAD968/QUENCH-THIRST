@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import "./Auth.css";
-import LoopingWords from "./temp-assets/loop";  // Import component
+import LoopingWords from "./temp-assets/loop";
 import "./temp-assets/loop.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import gsap from "gsap";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -35,7 +34,6 @@ const Auth = () => {
   
         if (isLogin) {
           localStorage.setItem("user", JSON.stringify(response.data.user));
-          alert("Login successful!");
   
           // Redirect based on role
           if (response.data.user.role === "admin") {
@@ -45,9 +43,9 @@ const Auth = () => {
           } else {
             navigate("/user-dashboard");
           }
-        } else {
-          alert("Registration successful!");
-          setIsLogin(true); // Switch to login after registration
+        }
+        else{
+          setIsLogin(true);
         }
       } catch (error) {
         console.error(error);

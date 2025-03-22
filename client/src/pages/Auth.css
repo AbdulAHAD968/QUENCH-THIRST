@@ -16,6 +16,8 @@ body {
     align-items: center;
     background-color: rgb(231, 231, 231);
     overflow: hidden;
+    /* background: linear-gradient(rgba(0, 0, 0, 0.155), rgba(167, 163, 163, 0.248)),  
+            url('./temp-assets/water.jpeg') no-repeat center center; */
 }
 
 /* Split Layout */
@@ -28,11 +30,15 @@ body {
 /* Animation Side */
 .animation-side {
     flex: 1;
-    background: linear-gradient(135deg, #296b97, #1f6c85);
+    background: linear-gradient(rgba(34, 33, 33, 0.323), rgba(167, 163, 163, 0.062)),  
+            url('./temp-assets/water.jpeg') no-repeat center center;
+    
+    /* background: transparent; */
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    border-right: 2px solid rgb(33, 127, 163);
 }
 
 .animation-side h1 {
@@ -59,6 +65,8 @@ body {
     align-items: center;
     background: linear-gradient(rgba(34, 33, 33, 0.323), rgba(167, 163, 163, 0.062)),  
             url('./temp-assets/water.jpeg') no-repeat center center;  
+    
+    /* background: transparent; */
     background-size: cover;
     width: 100%;
 }
