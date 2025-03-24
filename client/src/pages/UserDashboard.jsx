@@ -5,9 +5,9 @@ import UserHeader from "../components/UserHeader/UserHeader";
 import AvailableItems from "../components/AvailableItems/AvailableItems";
 import TodoList from "../components/TodoList/TodoList";
 import OrderHistory from "../components/OrderHistory/OrderHistory";
-// import Feedback from "../components/Feedback/Feedback";
+import Feedback from "../components/Feedback/UserFeedback";
 // import PlaceOrder from "../components/PlaceOrder/PlaceOrder";
-// import Settings from "../components/Settings/Settings";
+import Settings from "../components/Settings/UserSettings";
 import "./UserDashboard.css";
 
 const UserDashboard = () => {
@@ -33,6 +33,8 @@ const UserDashboard = () => {
             <Route path="/" element={<AvailableItems />} /> {/* Default landing page */}
             <Route path="/history" element={<OrderHistory />} /> {/* Order History */}
             <Route path="/todo" element={<TodoList />} /> {/* Todo List */}
+            <Route path="/feedback" element={<Feedback />} /> {/* Feedback */}
+            <Route path="/settings" element={<Settings />} /> {/* Settings */}
           </Routes>
         </div>
       </div>

@@ -30,8 +30,8 @@ body {
 /* Animation Side */
 .animation-side {
     flex: 1;
-    background: linear-gradient(rgba(34, 33, 33, 0.323), rgba(167, 163, 163, 0.062)),  
-            url('./temp-assets/water.jpeg') no-repeat center center;
+    background: linear-gradient(rgba(34, 33, 33, 0.17), rgba(99, 96, 96, 0.108)),  
+            url('./temp-assets/water.png') no-repeat center center;
     
     /* background: transparent; */
     display: flex;
@@ -216,11 +216,11 @@ header {
 }
 
 /* Hide the form that's not active */
-/* .hidden {
+.hidden {
     opacity: 0;
     pointer-events: none;
     visibility: hidden;
-} */
+}
 
 /* Show the active form */
 /* .visible {

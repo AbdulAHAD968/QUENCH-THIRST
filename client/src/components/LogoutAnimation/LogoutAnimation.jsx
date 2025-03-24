@@ -137,7 +137,7 @@ const LogoutAnimation = () => {
     let animationFrameId;
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
-      head.rotation.y += 0.001;
+      head.rotation.y += 0.02;
       controls.update();
       renderer.render(scene, camera);
     };
