@@ -8,18 +8,18 @@ const UserSidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // Clear user data
-    navigate("/logout-animation"); // Redirect to the LogoutAnimation component
+    localStorage.removeItem("user");
+    navigate("/logout-animation");
   };
 
   // Define menu items
   const menuItems = [
     { path: "/user-dashboard", icon: <FaHome />, label: "Dashboard" },
-    { path: "/user-dashboard/orders", icon: <FaShoppingCart />, label: "Place Order" },
+    { path: "/user-dashboard/placeOrder", icon: <FaShoppingCart />, label: "Place Order" },
     { path: "/user-dashboard/history", icon: <FaHistory />, label: "Order History" },
     { path: "/user-dashboard/feedback", icon: <FaComment />, label: "Feedback" },
     { path: "/user-dashboard/settings", icon: <FaCog />, label: "Settings" },
-    { path: "/user-dashboard/todo", icon: <FaList />, label: "Todo List" }, // New Todo List ent
+    { path: "/user-dashboard/todo", icon: <FaList />, label: "Todo List" },
   ];
 
   return (

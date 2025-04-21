@@ -8,8 +8,10 @@ import Orders from "../components/Orders/Orders";
 import Sales from "../components/Sales/Sales";
 import Notifications from "../components/Notifications/Notifications";
 import Feedback from "../components/Feedback/Feedback";
-import Settings from "../components/Settings/Settings"; // Import the Settings component
+import Settings from "../components/Settings/Settings";
 import DashboardOverview from "../components/DashboardOverview/DashboardOverview";
+import ProductList from '../components/productList/ProductList';
+import ProductForm from '../components/productList/ProductForm';
 import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
@@ -31,16 +33,19 @@ const AdminDashboard = () => {
       <div className={`main-content ${isSidebarOpen ? "" : "sidebar-closed"}`}>
         <Header toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
         <div className="content">
-          <Routes>
-            <Route path="users" element={<Users />} /> {/* Users Management */}
-            <Route path="employees" element={<Employees />} /> {/* Employees Management */}
-            <Route path="orders" element={<Orders />} /> {/* Orders Management */}
-            <Route path="sales" element={<Sales />} /> {/* Sales Management */}
-            <Route path="notifications" element={<Notifications />} /> {/* Notifications Management */}
-            <Route path="feedback" element={<Feedback />} /> {/* Feedback Management */}
-            <Route path="settings" element={<Settings />} /> {/* Settings Management */}
-            <Route path="/" element={<DashboardOverview />} /> {/* Default landing page */}
-          </Routes>
+        <Routes>
+          <Route path="/" element={<DashboardOverview />} />
+          <Route path="users" element={<Users />} />
+          <Route path="employees" element={<Employees />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="sales" element={<Sales />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="feedback" element={<Feedback />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="products" element={<ProductList isAdmin={true} />} />
+          <Route path="add-product" element={<ProductForm editMode={false} />} />
+          <Route path="edit-product/:id" element={<ProductForm editMode={true} />} />
+        </Routes>
         </div>
       </div>
     </div>

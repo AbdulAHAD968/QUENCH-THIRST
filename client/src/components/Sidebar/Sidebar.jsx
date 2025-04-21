@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaUsers, FaShoppingCart, FaChartLine, FaEnvelope, FaCog, FaPowerOff, FaComment } from "react-icons/fa";
+import { FaUser, FaUsers, FaShoppingCart, FaChartLine, FaEnvelope, FaCog, FaPowerOff, FaComment, FaBoxOpen } from "react-icons/fa";
 import "./Sidebar.css";
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
@@ -62,6 +62,15 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             <span>Settings</span>
           </Link>
         </li>
+
+        {/* ➕ New Inventory / Products Section */}
+        <li>
+          <Link to="/admin-dashboard/products">
+            <FaBoxOpen />
+            <span>Inventory</span>
+          </Link>
+        </li>
+
         <li>
           <button onClick={handleLogout} className="logout-button">
             <FaPowerOff />
