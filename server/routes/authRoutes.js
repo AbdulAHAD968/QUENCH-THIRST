@@ -1,6 +1,6 @@
 const express = require("express");
 const { registerUser, loginUser, createAdmin } = require("../controllers/authController");
-const { authMiddleware, isAdmin } = require("../middleware/authMiddleware");
+const { protect, admin } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 // Protected route (only admins can access)
-router.post("/create-admin", authMiddleware, isAdmin, createAdmin);
+router.post("/create-admin", protect, admin, createAdmin);
 
 module.exports = router;
