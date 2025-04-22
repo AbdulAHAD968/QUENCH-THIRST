@@ -3,9 +3,6 @@ const Product = require('../models/productModel');
 const asyncHandler = require('express-async-handler');
 const { validateProductInput } = require('../utils/validators');
 
-// @desc    Get all products with filtering and pagination
-// @route   GET /api/products
-// @access  Public
 const getProducts = asyncHandler(async (req, res) => {
   const pageSize = Number(req.query.pageSize) || 10;
   const page = Number(req.query.page) || 1;
@@ -31,9 +28,6 @@ const getProducts = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Get single product
-// @route   GET /api/products/:id
-// @access  Public
 const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
   
@@ -45,9 +39,6 @@ const getProductById = asyncHandler(async (req, res) => {
   res.json(product);
 });
 
-// @desc    Create a product
-// @route   POST /api/products
-// @access  Private/Admin
 const createProduct = asyncHandler(async (req, res) => {
   const { errors, valid } = validateProductInput(req.body);
   
@@ -70,9 +61,6 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createdProduct);
 });
 
-// @desc    Update a product
-// @route   PUT /api/products/:id
-// @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res) => {
   const { errors, valid } = validateProductInput(req.body);
   
@@ -101,9 +89,6 @@ const updateProduct = asyncHandler(async (req, res) => {
   res.json(updatedProduct);
 });
 
-// @desc    Delete a product
-// @route   DELETE /api/products/:id
-// @access  Private/Admin
 const deleteProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
@@ -116,9 +101,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
   res.json({ message: 'Product removed successfully' });
 });
 
-// @desc    Get top products
-// @route   GET /api/products/top
-// @access  Public
+
 const getTopProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({}).sort({ price: -1 }).limit(4);
   res.json(products);

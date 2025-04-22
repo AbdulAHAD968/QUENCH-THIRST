@@ -14,12 +14,12 @@ if (!process.env.MONGO_URI) {
 
 const sampleProducts = [
   {
-    name: "Mineral Water 1L",
+    name: "Mineral Water 2L",
     description: "Pure mineral water in 1 liter bottle",
     category: "bottled_water",
     price: 50,
     stockQuantity: 100,
-    imageUrl: "https://example.com/water1.jpg"
+    imageUrl: "https://th.bing.com/th/id/OIP.wgyA-fuaaRIyqVR9Zv3jcgHaK3?rs=1&pid=ImgDetMain"
   },
   {
     name: "Mineral Water 5L",
@@ -27,23 +27,23 @@ const sampleProducts = [
     category: "bottled_water",
     price: 200,
     stockQuantity: 50,
-    imageUrl: "https://example.com/water5.jpg"
+    imageUrl: "https://th.bing.com/th/id/OIP.wgyA-fuaaRIyqVR9Zv3jcgHaK3?rs=1&pid=ImgDetMain"
   },
   {
-    name: "Water Dispenser Standard",
+    name: "Water Dispenser LARGE",
     description: "Standard water dispenser with hot and cold options",
     category: "dispensers",
-    price: 5000,
-    stockQuantity: 10,
-    imageUrl: "https://example.com/dispenser1.jpg"
+    price: 50000,
+    stockQuantity: 100,
+    imageUrl: "https://th.bing.com/th/id/OIP.wgyA-fuaaRIyqVR9Zv3jcgHaK3?rs=1&pid=ImgDetMain"
   },
   {
-    name: "Water Purifier",
+    name: "Water Purifier MINI",
     description: "Advanced water purification system",
     category: "accessories",
-    price: 8000,
-    stockQuantity: 5,
-    imageUrl: "https://example.com/purifier1.jpg"
+    price: 4000,
+    stockQuantity: 50,
+    imageUrl: "https://th.bing.com/th/id/OIP.wgyA-fuaaRIyqVR9Zv3jcgHaK3?rs=1&pid=ImgDetMain"
   },
 ];
 
