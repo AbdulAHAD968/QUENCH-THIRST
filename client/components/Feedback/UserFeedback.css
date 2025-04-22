@@ -1,0 +1,123 @@
+/* User Feedback Container */
+.user-feedback-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.user-feedback-container h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.user-feedback-container p {
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Feedback Form */
+.feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.feedback-type {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    font-size: 1rem;
+}
+
+/* Star Rating */
+.star-rating {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-height: 150px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #3C91E6;
+    box-shadow: 0 0 0 2px rgba(60, 145, 230, 0.2);
+}
+
+/* Submit Button */
+.submit-btn {
+    background: #3C91E6;
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    background: #2a7bc8;
+}
+
+/* Thank You Message */
+.thank-you-message {
+    text-align: center;
+    padding: 2rem;
+}
+
+.thank-you-message h2 {
+    color: #4CAF50;
+    margin-bottom: 1rem;
+}
+
+.thank-you-message p {
+    color: #7f8c8d;
+    margin-bottom: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .user-feedback-container {
+    padding: 1.5rem;
+    }
+}

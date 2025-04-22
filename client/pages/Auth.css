@@ -1,0 +1,269 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(231, 231, 231);
+    overflow: hidden;
+    /* background: linear-gradient(rgba(0, 0, 0, 0.155), rgba(167, 163, 163, 0.248)),  
+            url('./temp-assets/water.jpeg') no-repeat center center; */
+}
+
+/* Split Layout */
+.split-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Animation Side */
+.animation-side {
+    flex: 1;
+    background: linear-gradient(rgba(34, 33, 33, 0.17), rgba(99, 96, 96, 0.108)),  
+            url('./temp-assets/water.png') no-repeat center center;
+    
+    /* background: transparent; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-right: 2px solid rgb(33, 127, 163);
+}
+
+.animation-side h1 {
+    color: white;
+    font-size: 3rem;
+    text-align: center;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Form Side */
+.form-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(rgba(34, 33, 33, 0.323), rgba(167, 163, 163, 0.062)),  
+            url('./temp-assets/water.jpeg') no-repeat center center;  
+    
+    /* background: transparent; */
+    background-size: cover;
+    width: 100%;
+}
+
+.container {
+    width: 70%;
+    height: 90%;
+    max-width: 600px;
+    background-color: transparent;
+    border: 4px transparent;
+    border-image: linear-gradient(135deg, #3a8ddb, #2cc7ff) 1; 
+    border-radius: 60px;
+    box-shadow: 0px 0px 20px rgb(234, 240, 243);
+    padding: 30px;
+    text-align: center;
+    position: relative;
+    animation: waterFlow 1s ease-in-out;
+}
+
+
+@keyframes waterFlow {
+    0% { border-image-source: linear-gradient(135deg, #3a8ddb, #2cc7ff); }
+    50% { border-image-source: linear-gradient(135deg, #2cc7ff, #3a8ddb); }
+    100% { border-image-source: linear-gradient(135deg, #3a8ddb, #2cc7ff); }
+}
+
+.container {
+    animation: waterFlow 5s infinite alternate;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.heading {
+    color: rgb(255, 255, 255);
+}
+
+.title {
+    font-weight: 400;
+    letter-spacing: 1.5px;
+}
+
+.btn {
+    height: 60px;
+    width: 100%;
+    max-width: 350px;
+    margin: 20px auto;
+    box-shadow: 10px 10px 30px rgb(41, 40, 40);
+    border-radius: 50px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    animation: slideIn 0.7s ease-in-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.login, .signup {
+    font-size: 22px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.slider {
+    height: 60px;
+    width: 50%;
+    border-radius: 50px;
+    background-image: linear-gradient(to right, rgb(104, 215, 243), rgb(91, 230, 255));
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.5s ease-in-out;
+}
+
+.moveslider {
+    left: 50%;
+}
+
+.form-section {
+    height: auto;
+    width: 100%;
+    display: flex;
+    position: relative;
+    transition: all 0.5s ease-in-out;
+}
+
+.login-box, .signup-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    box-shadow: #fbfdff;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.login-box {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.signup-box {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.form-section-move .login-box {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.form-section-move .signup-box {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Hide the form that's not active */
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* Show the active form */
+/* .visible {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+} */
+
+
+.ele {
+    height: 50px;
+    width: 100%;
+    max-width: 450px;
+    outline: none;
+    border: none;
+    color: rgb(77, 77, 77);
+    background-color: rgb(240, 240, 240);
+    border-radius: 50px;
+    padding-left: 30px;
+    font-size: 18px;
+    margin: 10px 0;
+    animation: slideUp 0.6s ease-in-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.clkbtn {
+    height: 50px;
+    width: 200px;
+    border-radius: 50px;
+    background-image: linear-gradient(to right, rgb(110, 255, 245), rgb(91, 244, 255));
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+    animation: fadeIn 1.5s ease-in-out;
+}
