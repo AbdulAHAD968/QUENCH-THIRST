@@ -1,0 +1,150 @@
+/* Define color variables */
+:root {
+    --color-neutral-300: rgb(91, 230, 255);
+    --color-neutral-400: rgb(91, 230, 255);
+    --color-neutral-500: rgb(91, 230, 255);
+    --color-dark: #fcfcfc;
+    --color-primary: #fffdfb;
+    --size-font: 16px;
+    --container-padding: 10px;
+}
+
+/* Apply the styles */
+body {
+    background-color: var(--color-neutral-300);
+    color: var(--color-dark);
+    font-size: var(--size-font);
+}
+
+.cloneable {
+    padding: var(--container-padding);
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+}
+
+.looping-words {
+    height: 2.7em;
+    padding-left: 0.1em;
+    padding-right: 0.1em;
+    font-size: clamp(1rem, 3vw, 2.5rem);
+    line-height: 0.9;
+    position: relative;
+}
+
+.looping-words__list {
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-flow: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    font-family: "PP Neue Corp", sans-serif;
+    font-weight: 700;
+    list-style: none;
+    display: flex;
+    position: relative;
+}
+
+.looping-words__list.is--primary {
+    color: var(--color-primary);
+}
+
+.looping-words__list.is--gray {
+    color: var(--color-neutral-500);
+}
+
+.looping-words__fade {
+    background-image: linear-gradient(
+      180deg,
+      var(--color-neutral-300) 5%,
+      transparent 20%,
+      transparent 80%,
+      var(--color-neutral-300) 95%
+    );
+    border-radius: 7px;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.looping-words__fade.is--radial {
+    background-image: radial-gradient(
+        circle closest-side at 50% 50%,
+        transparent 64%,
+        var(--color-neutral-400) 93%
+    );
+    width: 140%;
+    display: block;
+    left: -60%;
+}
+
+.looping-words__selector {
+    pointer-events: none;
+    width: 100%;
+    height: 0.9em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+  
+.looping-words__edge {
+    border-top: 0.065em solid var(--color-primary);
+    border-left: 0.065em solid var(--color-primary);
+    width: 0.125em;
+    height: 0.125em;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.looping-words__edge.is--2 {
+    left: auto;
+    right: 0;
+    transform: rotate(90deg);
+}
+
+.looping-words__edge.is--3 {
+    inset: auto 0 0 auto;
+    transform: rotate(180deg);
+}
+
+.looping-words__edge.is--4 {
+    top: auto;
+    bottom: 0;
+    transform: rotate(270deg);
+}
+
+.looping-words__containers {
+    width: 100%;
+    height: 100%;
+    border-style: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.looping-words__p {
+    margin: 0;
+}
+
+@font-face {
+    font-family: "PP Neue Corp";
+    src: url("https://cdn.prod.website-files.com/6717aac16c9ea22eeef1e79e/6717de2d56e40b921572d2d9_PPNeueCorp-TightUltrabold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Ensuring consistent box-sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+    border-style: none;
+}
