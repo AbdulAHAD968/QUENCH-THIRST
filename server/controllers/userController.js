@@ -84,6 +84,34 @@ const deleteUser = asyncHandler(async (req, res) => {
       throw new Error("User not found");
     }
 });
+
+const updateUserProfile = asyncHandler(async (req, res) => {
+  
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    // Update username and email
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+
+    // Update password if provided
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      role: updatedUser.role,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
   
 
 module.exports = {
@@ -92,4 +120,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  updateUserProfile,
 };

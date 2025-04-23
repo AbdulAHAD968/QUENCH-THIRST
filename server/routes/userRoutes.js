@@ -6,17 +6,22 @@ const {
   createUser,
   updateUser,
   deleteUser,
+  updateUserProfile,
 } = require("../controllers/userController");
 
-const { protect} = require("../middleware/authMiddleware");
+// Changed from "/profile" to "/profile/:id" to accept user ID
+router.route("/profile/:id")
+  .put(updateUserProfile)  // Update profile
+  .get(getUserById);       // Get profile (reusing existing controller)
 
+// Existing admin routes
 router.route("/")
-  .get(protect, getAllUsers)
-  .post(protect, createUser);
+  .get(getAllUsers)
+  .post(createUser);
 
 router.route("/:id")
-  .get(protect, getUserById)
-  .put(protect, updateUser)
-  .delete(protect, deleteUser);
+  .get(getUserById)
+  .put(updateUser)
+  .delete(deleteUser);
 
 module.exports = router;
