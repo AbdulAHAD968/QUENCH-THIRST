@@ -1,38 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaStar, FaReply, FaTrash } from "react-icons/fa";
+import axios from "axios";
 import "./Feedback.css";
 
 const Feedback = () => {
-  const [feedbackList, setFeedbackList] = useState([
-    { 
-      id: 1, 
-      user: "John Doe", 
-      comment: "Great service! Highly recommend.", 
-      rating: 5,
-      type: "positive",
-      response: "" 
-    },
-    { 
-      id: 2, 
-      user: "Jane Smith", 
-      comment: "Delivery was late, but the product is good.", 
-      rating: 3,
-      type: "neutral",
-      response: "" 
-    },
-    { 
-      id: 3, 
-      user: "Alice Johnson", 
-      comment: "Poor customer support.", 
-      rating: 1,
-      type: "negative",
-      response: "" 
-    },
-  ]);
-
+  const [feedbackList, setFeedbackList] = useState([]);
   const [filter, setFilter] = useState("all");
   const [newResponse, setNewResponse] = useState("");
   const [editingResponseId, setEditingResponseId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch all feedback from backend
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const { data } = await axios.get("/api/feedback/admin/all", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        setFeedbackList(data.data);
+      } catch (error) {
+        console.error("Error fetching feedback:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchFeedback();
+  }, []);
 
   // Categorize feedback based on rating
   const categorizeFeedback = (rating) => {
@@ -42,28 +37,53 @@ const Feedback = () => {
   };
 
   // Delete feedback
-  const deleteFeedback = (id) => {
-    setFeedbackList(feedbackList.filter((feedback) => feedback.id !== id));
+  const deleteFeedback = async (id) => {
+    try {
+      await axios.delete(`/api/feedback/admin/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      setFeedbackList(feedbackList.filter((feedback) => feedback._id !== id));
+    } catch (error) {
+      console.error("Error deleting feedback:", error);
+    }
   };
 
   // Add/update response
-  const handleResponseSubmit = (id) => {
-    setFeedbackList(
-      feedbackList.map((feedback) =>
-        feedback.id === id 
-          ? { ...feedback, response: newResponse } 
-          : feedback
-      )
-    );
-    setEditingResponseId(null);
-    setNewResponse("");
+  const handleResponseSubmit = async (id) => {
+    try {
+      const { data } = await axios.put(
+        `/api/feedback/admin/respond/${id}`,
+        { response: newResponse },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
+      
+      setFeedbackList(
+        feedbackList.map((feedback) =>
+          feedback._id === id 
+            ? { ...feedback, adminResponse: newResponse } 
+            : feedback
+        )
+      );
+      setEditingResponseId(null);
+      setNewResponse("");
+    } catch (error) {
+      console.error("Error submitting response:", error);
+    }
   };
 
   // Filter feedback
   const filteredFeedback = feedbackList.filter((feedback) => {
     if (filter === "all") return true;
-    return feedback.type === filter;
+    return categorizeFeedback(feedback.rating) === filter;
   });
+
+  if (isLoading) return <div className="feedback-container">Loading...</div>;
 
   return (
     <div className="feedback-container">
@@ -81,19 +101,19 @@ const Feedback = () => {
           className={filter === "positive" ? "active" : ""} 
           onClick={() => setFilter("positive")}
         >
-          Positive ({feedbackList.filter(f => f.type === "positive").length})
+          Positive ({feedbackList.filter(f => categorizeFeedback(f.rating) === "positive").length})
         </button>
         <button 
           className={filter === "neutral" ? "active" : ""} 
           onClick={() => setFilter("neutral")}
         >
-          Neutral ({feedbackList.filter(f => f.type === "neutral").length})
+          Neutral ({feedbackList.filter(f => categorizeFeedback(f.rating) === "neutral").length})
         </button>
         <button 
           className={filter === "negative" ? "active" : ""} 
           onClick={() => setFilter("negative")}
         >
-          Negative ({feedbackList.filter(f => f.type === "negative").length})
+          Negative ({feedbackList.filter(f => categorizeFeedback(f.rating) === "negative").length})
         </button>
       </div>
 
@@ -101,11 +121,11 @@ const Feedback = () => {
       <div className="feedback-list">
         {filteredFeedback.map((feedback) => (
           <div 
-            key={feedback.id} 
-            className={`feedback-card ${feedback.type}`}
+            key={feedback._id} 
+            className={`feedback-card ${categorizeFeedback(feedback.rating)}`}
           >
             <div className="feedback-header">
-              <h3>{feedback.user}</h3>
+              <h3>User ID: {feedback.user._id}</h3>
               <div className="star-rating">
                 {[...Array(5)].map((_, i) => (
                   <FaStar 
@@ -117,21 +137,25 @@ const Feedback = () => {
             </div>
             
             <p className="feedback-comment">{feedback.comment}</p>
+            <small className="feedback-date">
+              {new Date(feedback.createdAt).toLocaleString()}
+            </small>
             
             {/* Response Section */}
-            {feedback.response ? (
+            {feedback.adminResponse ? (
               <div className="response-section">
                 <strong>Your Response:</strong>
-                <p>{feedback.response}</p>
+                <p>{feedback.adminResponse}</p>
                 <button 
-                  onClick={() => setEditingResponseId(feedback.id)}
-                  className="edit-response"
+                  onClick={() => {
+                    setEditingResponseId(feedback._id);
+                    setNewResponse(feedback.adminResponse);
+                  }}
                 >
-                  <FaReply /> Edit Response
                 </button>
               </div>
             ) : (
-              editingResponseId === feedback.id ? (
+              editingResponseId === feedback._id ? (
                 <div className="response-form">
                   <textarea
                     value={newResponse}
@@ -139,15 +163,16 @@ const Feedback = () => {
                     placeholder="Write your response..."
                   />
                   <button 
-                    onClick={() => handleResponseSubmit(feedback.id)}
+                    onClick={() => handleResponseSubmit(feedback._id)}
                     className="submit-response"
                   >
                     Submit
                   </button>
                 </div>
-              ) : (
+              ) 
+              : (
                 <button 
-                  onClick={() => setEditingResponseId(feedback.id)}
+                  onClick={() => setEditingResponseId(feedback._id)}
                   className="add-response"
                 >
                   <FaReply /> Add Response
@@ -156,7 +181,7 @@ const Feedback = () => {
             )}
 
             <button 
-              onClick={() => deleteFeedback(feedback.id)}
+              onClick={() => deleteFeedback(feedback._id)}
               className="delete-feedback"
             >
               <FaTrash /> Delete

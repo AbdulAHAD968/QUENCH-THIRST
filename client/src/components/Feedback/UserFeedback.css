@@ -1,123 +1,154 @@
-/* User Feedback Container */
+/* General container styling */
 .user-feedback-container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 2rem auto;
     padding: 2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    background: rgba(255, 253, 253, 0.163);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(22, 242, 253, 0.613);
+    color: #31dfca;
+    font-family: "Segoe UI", sans-serif;
 }
 
+/* Titles and text */
 .user-feedback-container h2 {
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #1b96dd;
+    text-decoration: underline;
 }
 
 .user-feedback-container p {
-    color: #7f8c8d;
-    text-align: center;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    color: #000000;
+    font-weight: bolder;
 }
 
-/* Feedback Form */
+/* Form styling */
 .feedback-form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
 .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: #c29630;
 }
 
+/* Dropdown */
 .feedback-type {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
+    width: 100%;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #c29630;
     font-size: 1rem;
+    backdrop-filter: blur(10px);
 }
 
-/* Star Rating */
+.feedback-type:disabled {
+    opacity: 0.6;
+}
+
+/* Star rating */
 .star-rating {
     display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    margin: 0.5rem 0;
-}
-
-.star-rating input {
-    display: none;
+    gap: 0.7rem;
 }
 
 .star {
     cursor: pointer;
-    transition: color 0.2s;
+    transition: transform 0.2s ease;
+}
+
+.star:hover {
+    transform: scale(1.2);
 }
 
 /* Textarea */
 textarea {
     width: 100%;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    min-height: 150px;
-    resize: vertical;
-    font-family: inherit;
-    font-size: 1rem;
-}
-
-textarea:focus {
-    outline: none;
-    border-color: #3C91E6;
-    box-shadow: 0 0 0 2px rgba(60, 145, 230, 0.2);
-}
-
-/* Submit Button */
-.submit-btn {
-    background: #3C91E6;
-    color: white;
+    min-height: 100px;
+    padding: 0.75rem;
+    border-radius: 10px;
     border: none;
-    padding: 1rem;
-    border-radius: 8px;
+    resize: vertical;
     font-size: 1rem;
-    font-weight: 600;
+    color: #32c3bc;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+textarea::placeholder {
+    color: #c29630;
+}
+
+/* Submit button */
+.submit-btn {
+    background: linear-gradient(135deg, #7b61ff, #5ee4c7);
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    color: white;
     cursor: pointer;
-    transition: background 0.3s;
-    margin-top: 1rem;
+    transition: background 0.6s ease, transform 0.6s ease;
 }
 
 .submit-btn:hover {
-    background: #2a7bc8;
+    background: linear-gradient(135deg, #5ee4c7, #7b61ff);
+    transform: scale(1.03);
 }
 
-/* Thank You Message */
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Thank you message */
 .thank-you-message {
     text-align: center;
-    padding: 2rem;
 }
 
 .thank-you-message h2 {
-    color: #4CAF50;
+    font-size: 2rem;
     margin-bottom: 1rem;
 }
 
 .thank-you-message p {
-    color: #7f8c8d;
-    margin-bottom: 2rem;
+    color: #000000;
+    font-size: 1.1rem;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .user-feedback-container {
-    padding: 1.5rem;
-    }
+
+/* Star Rating */
+.star-rating {
+    display: flex;
+    gap: 0.7rem;
+}
+
+/* Hide native radio input but keep it accessible */
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+.star {
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Smooth hover and active glow */
+.star:hover,
+.star-rating input[type="radio"]:checked + .star,
+.star-rating input[type="radio"]:hover + .star {
+    transform: scale(1.2);
+    color: #FFD700 !important;
+    box-shadow: 0 0 8px #ffd900;
 }

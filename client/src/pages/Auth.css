@@ -31,9 +31,9 @@ body {
 .animation-side {
     flex: 1;
     background: linear-gradient(rgba(34, 33, 33, 0.17), rgba(99, 96, 96, 0.108)),  
-            url('./temp-assets/water.png') no-repeat center center;
-    
-    /* background: transparent; */
+                url('./temp-assets/ls-1.jpg') no-repeat center center;
+    background-size: cover;
+
     display: flex;
     justify-content: center;
     align-items: center;

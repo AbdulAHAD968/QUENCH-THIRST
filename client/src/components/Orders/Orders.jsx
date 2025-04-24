@@ -9,28 +9,7 @@ const Orders = () => {
       customerName: "John Doe",
       date: "2023-10-01",
       location: "123 Main St",
-      status: "Pending", // Pending, Delivered, Processing, Cancelled
-    },
-    {
-      id: 2,
-      customerName: "Jane Smith",
-      date: "2023-10-02",
-      location: "456 Elm St",
-      status: "Delivered",
-    },
-    {
-      id: 3,
-      customerName: "Alice Johnson",
-      date: "2023-10-03",
-      location: "789 Oak St",
-      status: "Processing",
-    },
-    {
-      id: 4,
-      customerName: "Bob Brown",
-      date: "2023-10-04",
-      location: "321 Pine St",
-      status: "Cancelled",
+      status: "Pending",
     },
   ];
 

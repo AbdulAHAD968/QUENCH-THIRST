@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
+import axios from "axios";
+import { toast } from "react-toastify";
 import "./UserFeedback.css";
 
 const UserFeedback = () => {
@@ -8,16 +10,46 @@ const UserFeedback = () => {
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [feedbackType, setFeedbackType] = useState("general");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the feedback to your backend
-    console.log({
-      rating,
-      comment,
-      type: feedbackType
-    });
-    setSubmitted(true);
+    setIsLoading(true);
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+        if (!user || !user._id) {
+          throw new Error("User not authenticated");
+        }
+
+        const response = await axios.post("/api/feedback", {
+          userId: user._id,
+          userName: user.name,
+          rating,
+          comment,
+          feedbackType
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });      
+
+      toast.success("Feedback submitted successfully!", {
+        icon: "✅"
+      });
+      setSubmitted(true);
+    } 
+    catch (error) {
+      const message = error.response?.data?.message || 
+                     error.message || 
+                     "Failed to submit feedback";
+      toast.error(message, {
+        icon: "❌"
+      });
+    } 
+    finally {
+      setIsLoading(false);
+    }
   };
 
   const resetForm = () => {
@@ -52,6 +84,7 @@ const UserFeedback = () => {
             value={feedbackType}
             onChange={(e) => setFeedbackType(e.target.value)}
             className="feedback-type"
+            disabled={isLoading}
           >
             <option value="general">General Feedback</option>
             <option value="order">Order Experience</option>
@@ -72,6 +105,7 @@ const UserFeedback = () => {
                     name="rating"
                     value={ratingValue}
                     onClick={() => setRating(ratingValue)}
+                    disabled={isLoading}
                   />
                   <FaStar
                     className="star"
@@ -93,11 +127,16 @@ const UserFeedback = () => {
             onChange={(e) => setComment(e.target.value)}
             placeholder="Tell us about your experience..."
             required
+            disabled={isLoading}
           />
         </div>
 
-        <button type="submit" className="submit-btn">
-          Submit Feedback
+        <button 
+          type="submit" 
+          className="submit-btn"
+          disabled={isLoading || !comment || rating === 0}
+        >
+          {isLoading ? "Submitting..." : "Submit Feedback"}
         </button>
       </form>
     </div>

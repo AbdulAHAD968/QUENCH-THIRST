@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSave, FaTimes, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
+import { FaSave, FaTimes , FaCheck, FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 import './ProductList.css';
+import { toast } from 'react-toastify';
 
 const ProductManager = ({ isAdmin }) => {
   const [products, setProducts] = useState([]);
@@ -26,13 +27,14 @@ const ProductManager = ({ isAdmin }) => {
         setLoading(false);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
+        toast.error(`Error fetching products: ${err.response?.data?.message || err.message}`);
         setLoading(false);
       }
     };
-
+  
     fetchProducts();
   }, []);
-
+  
   const deleteProduct = async (productId) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
@@ -42,12 +44,21 @@ const ProductManager = ({ isAdmin }) => {
           }
         });
         setProducts(products.filter(product => product._id !== productId));
+        toast.success('Product deleted successfully!', {
+          icon: <FaCheck style={{ color: '#28a745' }} />,
+          autoClose: 3000,
+          position: 'top-right',
+        });
       } catch (err) {
-        alert(err.response?.data?.message || err.message);
+        toast.error(err.response?.data?.message || err.message, {
+          icon: <FaTimes style={{ color: '#dc3545' }} />,
+          autoClose: 4000,
+          position: 'top-right',
+        });
       }
     }
   };
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -57,12 +68,12 @@ const ProductManager = ({ isAdmin }) => {
         : value
     }));
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-
+  
     try {
       if (formMode === 'edit') {
         await axios.put(
@@ -75,10 +86,14 @@ const ProductManager = ({ isAdmin }) => {
             }
           }
         );
-        // Update the products list with the edited product
         setProducts(products.map(product => 
           product._id === currentProductId ? { ...product, ...formData } : product
         ));
+        toast.success('Product updated successfully!', {
+          icon: <FaCheck style={{ color: '#28a745' }} />,
+          autoClose: 3000,
+          position: 'top-right',
+        });
       } else {
         const { data } = await axios.post(
           'http://localhost:5000/api/products',
@@ -91,10 +106,21 @@ const ProductManager = ({ isAdmin }) => {
           }
         );
         setProducts([...products, data.product]);
+        toast.success('Product added successfully!', {
+          icon: <FaCheck style={{ color: '#28a745' }} />,
+          autoClose: 3000,
+          position: 'top-right',
+        });
       }
       closeForm();
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      const errorMessage = err.response?.data?.message || err.message;
+      setError(errorMessage);
+      toast.error(errorMessage, {
+        icon: <FaTimes style={{ color: '#dc3545' }} />,
+        autoClose: 4000,
+        position: 'top-right',
+      });
     } finally {
       setLoading(false);
     }

@@ -1,15 +1,18 @@
 /* Main Container */
 .feedback-container {
-    padding: 2rem;
+    padding: 1rem;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: #d4cece5e;
+    border-radius: 4px;
 }
 
 .feedback-container h2 {
-    color: #2c3e50;
+    color: #2971b8;
     margin-bottom: 1.5rem;
-    font-size: 2rem;
+    font-size: 2.3rem;
     text-align: center;
+    text-decoration: underline;
 }
 
 /* Filter Buttons */
@@ -25,7 +28,7 @@
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 20px;
-    background: #ecf0f1;
+    background: #80ddf4bc;
     color: #2c3e50;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -33,13 +36,13 @@
 }
 
 .feedback-filters button.active {
-    background: #3C91E6;
+    background: rgba(73, 216, 30, 0.761);
     color: white;
 }
 
 .feedback-filters button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(5, 149, 245, 0.712);
 }
 
 /* Feedback Cards */
@@ -52,7 +55,7 @@
 .feedback-card {
     padding: 1.5rem;
     border-radius: 12px;
-    background: white;
+    background: rgba(180, 180, 180, 0.515);
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     position: relative;
     transition: transform 0.3s ease;
@@ -85,6 +88,7 @@
     margin: 0;
     color: #2c3e50;
     font-size: 1.2rem;
+    text-decoration: underline;
 }
 
 .star-rating {
@@ -93,14 +97,16 @@
 }
 
 .feedback-comment {
-    color: #34495e;
+    color: #1e1c1c;
     line-height: 1.6;
+    font-weight: bolder;
     margin-bottom: 1.5rem;
 }
 
 /* Response Section */
 .response-section {
-    background: #f8f9fa;
+    border-radius: 4px;
+    background: #c9cacc3f;
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -112,6 +118,11 @@
     margin-bottom: 0.5rem;
 }
 
+.response-section p{
+    color: #121414;
+    margin: 0.5rem 0;
+}
+
 .response-form {
     margin-bottom: 1rem;
 }
@@ -119,11 +130,12 @@
 .response-form textarea {
     width: 100%;
     padding: 0.8rem;
-    border: 1px solid #ddd;
+    border: 1px solid #0055ff;
     border-radius: 8px;
     min-height: 80px;
     margin-bottom: 0.5rem;
     resize: vertical;
+    color: #121414;
 }
 
 /* Buttons */
@@ -171,6 +183,12 @@ button {
     display: flex;
     align-items: center;
     gap: 5px;
+}
+
+.feedback-date{
+    font-size: 0.9rem;
+    color: #121414;
+    margin-top: 0.5rem;
 }
 
 .delete-feedback:hover {

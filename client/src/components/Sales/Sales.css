@@ -1,11 +1,14 @@
 .sales {
     padding: 20px;
+    background-color: #dcd5d556;
+    border-radius: 1.5rem;
 }
 
 .sales h2 {
     margin-bottom: 20px;
     font-size: 24px;
-    color: #0080ff;
+    color: #0775e2;
+    text-align: center;
 }
 
 .time-period-toggle {
@@ -36,8 +39,116 @@
 .chart-container {
     width: 100%;
     height: 400px;
-    background: #fff;
+    background: #f6f4f490;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(52, 219, 234, 0.669);
     padding: 20px;
+}
+
+
+.loading, .error {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+.error {
+    color: #dc3545;
+}
+
+.sales-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, rgba(240, 240, 240, 0.4), rgba(220, 220, 220, 0.6));
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-width: 240px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.summary-card:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(240, 240, 240, 0.8));
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    transform: translateY(-5px) scale(1.02);
+    cursor: pointer;
+}
+  
+
+.summary-card h3 {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.summary-card p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #3C91E6;
+    margin: 0;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.time-period-toggle, .chart-type-toggle {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.time-period-toggle button,
+.chart-type-toggle button {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #ccc;
+  background: linear-gradient(to right, #ffffff, #f9f9f9);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.time-period-toggle button:hover,
+.chart-type-toggle button:hover {
+  background: linear-gradient(to right, #f5faff, #e6f0ff);
+  box-shadow: 0 4px 10px rgba(60, 145, 230, 0.25);
+  transform: translateY(-2px);
+  color: #666;
+}
+
+.time-period-toggle button.active,
+.chart-type-toggle button.active {
+  background: linear-gradient(145deg, #3C91E6, #337ace);
+  color: white;
+  border-color: #3C91E6;
+  box-shadow: 0 4px 12px rgba(60, 145, 230, 0.35);
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .sales-summary {
+    flex-direction: column;
+    }
+    
+    .controls {
+    flex-direction: column;
+    align-items: flex-start;
+    }
 }

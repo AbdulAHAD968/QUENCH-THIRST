@@ -12,6 +12,8 @@ import Settings from "../components/Settings/Settings";
 import DashboardOverview from "../components/DashboardOverview/DashboardOverview";
 import ProductManager from '../components/productList/ProductList'; // Updated import
 import "./AdminDashboard.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AdminDashboard = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -47,6 +49,20 @@ const AdminDashboard = () => {
           </Routes>
         </div>
       </div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+
     </div>
   );
 };

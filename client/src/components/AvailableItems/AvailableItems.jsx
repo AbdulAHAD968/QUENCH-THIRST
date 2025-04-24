@@ -155,7 +155,7 @@ const StyledWelcomeContainer = styled.div`
   }
   
   .truckTires svg {
-    width: 48px;
+    width:50px;
   }
 
   .road {
@@ -177,7 +177,7 @@ const StyledWelcomeContainer = styled.div`
     background-color: #282828;
     right: -10%;
     border-radius: 6px;
-    animation: roadAnimation 1.4s linear infinite;
+    animation: roadAnimation 2s linear infinite;
     border-left: 20px solid #f8fafc;
   }
 
@@ -276,9 +276,9 @@ const StyledWelcomeContainer = styled.div`
   .lampPost {
     position: absolute;
     bottom: 0;
-    right: -15%;
+    right: -10%;
     height: 250px;
-    animation: roadAnimation 1.8s linear infinite;
+    animation: roadAnimation 2s linear infinite;
     z-index: 1;
     fill: #282828;
   }

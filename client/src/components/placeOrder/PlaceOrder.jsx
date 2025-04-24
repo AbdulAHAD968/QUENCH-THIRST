@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaUser, FaLock, FaCheck, FaTimes, FaCreditCard, FaWallet } from 'react-icons/fa';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import './PlaceOrder.css';
 
 const PlaceOrder = () => {
@@ -12,8 +14,16 @@ const PlaceOrder = () => {
     state: '',
     postalCode: ''
   });
-  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [paymentMethod, setPaymentMethod] = useState('COD');
   const [loading, setLoading] = useState(false);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState({
+    cardNumber: '',
+    expiry: '',
+    cvv: '',
+    upiId: '',
+    walletNumber: ''
+  });
   const navigate = useNavigate();
 
   // Fetch products on component mount
@@ -75,7 +85,7 @@ const PlaceOrder = () => {
 
   // Calculate totals
   const itemsPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-  const deliveryPrice = itemsPrice > 1000 ? 0 : 100; // Free delivery for orders over 1000
+  const deliveryPrice = itemsPrice > 1000 ? 0 : 100;
   const totalPrice = itemsPrice + deliveryPrice;
 
   // Handle address change
@@ -86,49 +96,137 @@ const PlaceOrder = () => {
     });
   };
 
-  // Place order function
+  // Handle payment details change
+  const handlePaymentDetailsChange = (e) => {
+    setPaymentDetails({
+      ...paymentDetails,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const validatePaymentDetails = () => {
+    if (paymentMethod === 'Card') {
+      if (!paymentDetails.cardNumber || !paymentDetails.expiry || !paymentDetails.cvv) {
+        toast.error('Please fill all card details', {
+          icon: <FaTimes style={{ color: '#dc3545' }} />,
+          autoClose: 3000,
+          position: 'top-right',
+        });
+        return false;
+      }
+      if (paymentDetails.cardNumber.length !== 16) {
+        toast.error('Card number must be 16 digits', {
+          icon: <FaTimes style={{ color: '#dc3545' }} />,
+          autoClose: 3000,
+          position: 'top-right',
+        });
+        return false;
+      }
+    } else if (paymentMethod === 'Wallet') {
+      if (!paymentDetails.walletNumber) {
+        toast.error('Please enter wallet number', {
+          icon: <FaTimes style={{ color: '#dc3545' }} />,
+          autoClose: 3000,
+          position: 'top-right',
+        });
+        return false;
+      }
+    } else if (paymentMethod === 'UPI') {
+      if (!paymentDetails.upiId) {
+        toast.error('Please enter UPI ID', {
+          icon: <FaTimes style={{ color: '#dc3545' }} />,
+          autoClose: 3000,
+          position: 'top-right',
+        });
+        return false;
+      }
+    }
+    return true;
+  };
+
   const placeOrder = async () => {
     if (cart.length === 0) {
-      alert('Your cart is empty!');
+      toast.error('Your cart is empty!', {
+        icon: <FaTimes style={{ color: '#dc3545' }} />,
+        autoClose: 2000,
+        position: 'top-right',
+      });
       return;
     }
-
+  
     if (!address.street || !address.city || !address.state || !address.postalCode) {
-      alert('Please fill in all address fields');
+      toast.error('Please fill in all address fields', {
+        icon: <FaTimes style={{ color: '#dc3545' }} />,
+        autoClose: 3000,
+        position: 'top-right',
+      });
       return;
     }
+  
+    // For non-COD methods, show payment form
+    if (paymentMethod !== 'COD') {
+      setShowPaymentForm(true);
+      return;
+    }
+    
+    // For COD, proceed directly to place order
+    await submitOrder();
+  };
 
+  const submitOrder = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('userToken')}`
-        }
-      };
+      const user = JSON.parse(localStorage.getItem('user'));
 
-      const orderData = {
-        orderItems: cart,
+      const orderItems = cart.map(item => ({
+        _id: item.product,
+        name: item.name,
+        price: item.unitPrice,
+        quantity: item.quantity,
+      }));
+
+      const { data } = await axios.post('/api/orders', {
+        userId: user._id,
+        orderItems,
         deliveryAddress: address,
         paymentMethod,
+        paymentDetails: paymentMethod !== 'COD' ? paymentDetails : null,
         itemsPrice,
         deliveryPrice,
         totalPrice
-      };
-
-      const { data } = await axios.post('/api/orders', orderData, config);
-      navigate(`/order/${data._id}`);
-    } catch (error) {
-      console.error('Error placing order:', error);
-      alert('Failed to place order. Please try again.');
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      toast.success('Order placed successfully!', {
+        icon: <FaCheck style={{ color: '#28a745' }} />,
+        autoClose: 3000,
+        position: 'top-right',
+      });
+    } 
+    catch (error) {
+      console.error('Order error:', error.response?.data || error.message);
+      toast.error(error.response?.data?.message || 'Failed to place order', {
+        icon: <FaTimes style={{ color: '#dc3545' }} />,
+        autoClose: 3000,
+        position: 'top-right',
+      });
     } finally {
       setLoading(false);
+      setShowPaymentForm(false);
     }
+  };
+
+  const handlePaymentSubmit = () => {
+    if (!validatePaymentDetails()) return;
+    submitOrder();
   };
 
   return (
     <div className="place-order-container">
-      <h1>Place Your Water Order</h1>
+      <h1>Place Your Order Now!</h1>
       
       <div className="order-layout">
         {/* Products Section */}
@@ -242,9 +340,10 @@ const PlaceOrder = () => {
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 >
-                  <option value="cash">Cash on Delivery</option>
-                  <option value="credit_card">Credit Card</option>
-                  <option value="mobile_payment">Mobile Payment</option>
+                  <option value="COD">Cash on Delivery</option>
+                  <option value="Card">Credit/Debit Card</option>
+                  <option value="Wallet">Mobile Wallet</option>
+                  <option value="UPI">UPI Payment</option>
                 </select>
               </div>
 
@@ -259,6 +358,100 @@ const PlaceOrder = () => {
           )}
         </div>
       </div>
+
+      {/* Payment Details Modal */}
+      {showPaymentForm && (
+        <div className="payment-modal">
+          <div className="payment-modal-content">
+            <h2>
+              {paymentMethod === 'Card' ? <FaCreditCard /> : 
+               paymentMethod === 'Wallet' ? <FaWallet /> : null}
+              {paymentMethod} Details
+            </h2>
+            
+            {paymentMethod === 'Card' && (
+              <>
+                <div className="form-group">
+                  <label>Card Number</label>
+                  <input
+                    type="text"
+                    name="cardNumber"
+                    placeholder="1234 5678 9012 3456"
+                    value={paymentDetails.cardNumber}
+                    onChange={handlePaymentDetailsChange}
+                    maxLength="16"
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Expiry Date</label>
+                    <input
+                      type="text"
+                      name="expiry"
+                      placeholder="MM/YY"
+                      value={paymentDetails.expiry}
+                      onChange={handlePaymentDetailsChange}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>CVV</label>
+                    <input
+                      type="text"
+                      name="cvv"
+                      placeholder="123"
+                      value={paymentDetails.cvv}
+                      onChange={handlePaymentDetailsChange}
+                      maxLength="3"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {paymentMethod === 'Wallet' && (
+              <div className="form-group">
+                <label>Wallet Number</label>
+                <input
+                  type="text"
+                  name="walletNumber"
+                  placeholder="Enter your wallet number"
+                  value={paymentDetails.walletNumber}
+                  onChange={handlePaymentDetailsChange}
+                />
+              </div>
+            )}
+
+            {paymentMethod === 'UPI' && (
+              <div className="form-group">
+                <label>UPI ID</label>
+                <input
+                  type="text"
+                  name="upiId"
+                  placeholder="yourname@upi"
+                  value={paymentDetails.upiId}
+                  onChange={handlePaymentDetailsChange}
+                />
+              </div>
+            )}
+
+            <div className="modal-buttons">
+              <button 
+                onClick={() => setShowPaymentForm(false)}
+                className="cancel-btn"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handlePaymentSubmit}
+                disabled={loading}
+                className="submit-btn"
+              >
+                {loading ? 'Processing...' : 'Confirm Payment'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
