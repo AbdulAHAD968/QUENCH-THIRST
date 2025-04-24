@@ -1,5 +1,10 @@
-# QUENCH-THIRST
-- SE SEMESTER PROJECT. PUBLIC AND FREE TO USE.
-- INTEGRATED MONGODB FOR ADMIN, USER AND EMPLOYEES.
-- ALREADY DONE WITH THE ADMIN, USERS DASHBOARD.
-- EMPLOYEE DASHBOARD WILL BE ADDED SOON. NOT RELYING ON OPEN SOURCE STYLING.
+<img src="1.PNG" alt="The cover image">
+<img src="2.PNG" alt="The cover image">
+<img src="3.PNG" alt="The cover image">
+<img src="4.PNG" alt="The cover image">
+<img src="5.PNG" alt="The cover image">
+<img src="6.PNG" alt="The cover image">
+<img src="7.PNG" alt="The cover image">
+<img src="8.PNG" alt="The cover image">
+<img src="9.PNG" alt="The cover image">
+<img src="10.PNG" alt="The cover image">
