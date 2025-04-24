@@ -27,32 +27,41 @@ const registerUser = async (req, res) => {
   }
 };
 
+
 // Login a user
 const loginUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Find user by username
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT
-    const token = jwt.sign({ id: user._id, role: user.role }, "your-secret-key", { expiresIn: "1h" });
+    const token = jwt.sign({ id: user._id, role: user.role }, "your-secret-key", { 
+      expiresIn: "1h" 
+    });
 
-    // Send token in response
-    res.status(200).json({ message: "Login successful", token, user });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      }
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Create an admin (only accessible by existing admins)
 const createAdmin = async (req, res) => {

@@ -1,107 +1,150 @@
-const Order = require("../models/orderModel");
-const asyncHandler = require("express-async-handler");
+const asyncHandler = require('express-async-handler');
+const Order = require('../models/Order');
 
-// @desc    Create new order
-// @route   POST /api/orders
-// @access  Private
+
 const createOrder = asyncHandler(async (req, res) => {
   const {
+    userId,
     orderItems,
     deliveryAddress,
-    paymentMethod,
+    paymentMethod = 'COD', // Default to COD if not provided
     itemsPrice,
     deliveryPrice,
     totalPrice
   } = req.body;
 
-  if (orderItems && orderItems.length === 0) {
+  // Validate required fields
+  if (!orderItems || orderItems.length === 0) {
     res.status(400);
-    throw new Error("No order items");
-  } else {
-    const order = new Order({
-      orderItems,
-      user: req.user._id,
-      deliveryAddress,
-      paymentMethod,
-      itemsPrice,
-      deliveryPrice,
-      totalPrice
-    });
-
-    const createdOrder = await order.save();
-    res.status(201).json(createdOrder);
+    throw new Error('No order items');
   }
+
+  if (!userId) {
+    res.status(400);
+    throw new Error('User ID is required');
+  }
+
+  // Validate each order item
+  const validatedItems = orderItems.map(item => {
+    if (!item._id || !item.price || !item.quantity || !item.name) {
+      res.status(400);
+      throw new Error('Each item must include _id, name, price and quantity');
+    }
+    return {
+      product: item._id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity
+    };
+  });
+
+  // Validate payment method
+  const validPaymentMethods = ['COD', 'Card', 'UPI', 'Wallet'];
+  if (!validPaymentMethods.includes(paymentMethod)) {
+    res.status(400);
+    throw new Error(`Invalid payment method. Must be one of: ${validPaymentMethods.join(', ')}`);
+  }
+
+  const order = new Order({
+    user: userId,
+    orderItems: validatedItems,
+    deliveryAddress,
+    paymentMethod,
+    itemsPrice,
+    deliveryPrice,
+    totalPrice
+  });
+
+  const createdOrder = await order.save();
+  res.status(201).json(createdOrder);
 });
 
-// @desc    Get order by ID
-// @route   GET /api/orders/:id
-// @access  Private
 const getOrderById = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.id).populate("user", "username email");
+  const order = await Order.findById(req.params.id).populate(
+    'user',
+    'name email'
+  );
 
   if (order) {
     res.json(order);
   } else {
     res.status(404);
-    throw new Error("Order not found");
+    throw new Error('Order not found');
   }
 });
 
-// @desc    Get logged in user orders
-// @route   GET /api/orders/myorders
-// @access  Private
-const getUserOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
-  res.json(orders);
-});
-
-// @desc    Get all orders
-// @route   GET /api/orders
-// @access  Private/Admin
-const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({}).populate("user", "id username");
-  res.json(orders);
-});
-
-// @desc    Update order to delivered
-// @route   PUT /api/orders/:id/deliver
-// @access  Private/Admin
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    order.orderStatus = req.body.orderStatus || order.orderStatus;
-    order.deliveryDate = req.body.deliveryDate || order.deliveryDate;
-    order.assignedEmployee = req.body.assignedEmployee || order.assignedEmployee;
+    order.status = req.body.status || order.status;
+    
+    if (req.body.status === 'Delivered') {
+      order.deliveredAt = Date.now();
+    }
 
     const updatedOrder = await order.save();
     res.json(updatedOrder);
   } else {
     res.status(404);
-    throw new Error("Order not found");
+    throw new Error('Order not found');
   }
 });
 
-// @desc    Delete order
-// @route   DELETE /api/orders/:id
-// @access  Private/Admin
+const getUserOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id });
+  res.json(orders);
+});
+
+const getAllOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate('user', 'id name');
+  res.json(orders);
+});
+
 const deleteOrder = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
     await order.remove();
-    res.json({ message: "Order removed" });
+    res.json({ message: 'Order removed' });
   } else {
     res.status(404);
-    throw new Error("Order not found");
+    throw new Error('Order not found');
   }
 });
+
+const getSalesAnalytics = asyncHandler(async (req, res) => {
+  try {
+    const orders = await Order.find({})
+      .sort({ createdAt: 1 })
+      .lean();
+    
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: 'No orders found' });
+    }
+
+    const totalSales = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+    const totalOrders = orders.length;
+
+    res.json({
+      orders,
+      totalSales,
+      totalOrders,
+      averageOrderValue: totalSales / totalOrders
+    });
+  } catch (error) {
+    console.error('Error in sales analytics:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 
 module.exports = {
   createOrder,
   getOrderById,
+  updateOrderStatus,
   getUserOrders,
   getAllOrders,
-  updateOrderStatus,
-  deleteOrder
+  deleteOrder,
+  getSalesAnalytics,
 };
