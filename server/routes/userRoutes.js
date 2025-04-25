@@ -9,10 +9,10 @@ const {
   updateUserProfile,
 } = require("../controllers/userController");
 
-// Changed from "/profile" to "/profile/:id" to accept user ID
+
 router.route("/profile/:id")
   .put(updateUserProfile)  // Update profile
-  .get(getUserById);       // Get profile (reusing existing controller)
+  .get(getUserById);
 
 // Existing admin routes
 router.route("/")

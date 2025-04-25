@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Order = require('../models/Order');
 const User = require('../models/user');
-
+const EmployeeShipping = require('../models/EmployeeShipping');
 
 const createOrder = asyncHandler(async (req, res) => {
   const {
@@ -78,6 +78,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
+    const previousStatus = order.status;
     order.status = req.body.status || order.status;
     
     if (req.body.status === 'Delivered') {
@@ -85,12 +86,44 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     }
 
     const updatedOrder = await order.save();
+
+    // Handle employee shipping record creation/updates
+    if (req.body.status === 'Shipped' && previousStatus !== 'Shipped') {
+      // Create new shipping record when first shipped
+      await EmployeeShipping.create({
+        orderId: order._id,
+        employeeId: req.user._id, // Assuming the employee is the one making the request
+        deliveryTime: 2 // Default estimated time
+      });
+    } else if (req.body.status === 'Delivered' && previousStatus !== 'Delivered') {
+      // Update shipping record when delivered
+      const shippingRecord = await EmployeeShipping.findOneAndUpdate(
+        { orderId: order._id },
+        { 
+          status: 'Delivered',
+          deliveryTime: calculateDeliveryTime(order.createdAt)
+        },
+        { new: true }
+      );
+
+      if (!shippingRecord) {
+        console.warn(`No shipping record found for order ${order._id}`);
+      }
+    }
+
     res.json(updatedOrder);
   } else {
     res.status(404);
     throw new Error('Order not found');
   }
 });
+
+// Helper function to calculate delivery time in hours
+function calculateDeliveryTime(createdAt) {
+  const now = new Date();
+  const diffInHours = (now - createdAt) / (1000 * 60 * 60);
+  return Math.round(diffInHours * 10) / 10; // Round to 1 decimal place
+}
 
 const getUserOrders = asyncHandler(async (req, res) => {
   // Verify authentication
@@ -126,7 +159,11 @@ const deleteOrder = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
-    await order.remove();
+    // Also delete associated shipping record if exists
+    await EmployeeShipping.deleteOne({ orderId: req.params.id });
+    
+    // Use deleteOne() instead of remove()
+    await Order.deleteOne({ _id: req.params.id });
     res.json({ message: 'Order removed' });
   } else {
     res.status(404);
@@ -159,6 +196,33 @@ const getSalesAnalytics = asyncHandler(async (req, res) => {
   }
 });
 
+// New method to get employee shipping performance
+const getEmployeeShippingPerformance = asyncHandler(async (req, res) => {
+  try {
+    const employeeId = req.params.employeeId;
+    
+    const stats = await EmployeeShipping.aggregate([
+      { $match: { employeeId: mongoose.Types.ObjectId(employeeId) } },
+      { 
+        $group: {
+          _id: null,
+          totalOrders: { $sum: 1 },
+          avgDeliveryTime: { $avg: "$deliveryTime" },
+          delivered: { 
+            $sum: { 
+              $cond: [{ $eq: ["$status", "Delivered"] }, 1, 0] 
+            } 
+          }
+        }
+      }
+    ]);
+
+    res.json(stats[0] || {});
+  } catch (error) {
+    console.error('Error getting employee performance:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
 
 module.exports = {
   createOrder,
@@ -168,4 +232,5 @@ module.exports = {
   getAllOrders,
   deleteOrder,
   getSalesAnalytics,
+  getEmployeeShippingPerformance
 };
