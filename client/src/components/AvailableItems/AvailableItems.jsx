@@ -105,7 +105,7 @@ const StyledWelcomeContainer = styled.div`
     white-space: nowrap;
     overflow: hidden;
     border-right: 2px solid #3A86FF;
-    animation: typingReverse 4s linear infinite;
+    animation: typingReverse 5s linear infinite;
   }
 
   .loader {

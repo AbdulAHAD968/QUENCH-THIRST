@@ -8,7 +8,7 @@ const ProductManager = ({ isAdmin }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [formMode, setFormMode] = useState(null); // 'add', 'edit', or null
+  const [formMode, setFormMode] = useState(null);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',

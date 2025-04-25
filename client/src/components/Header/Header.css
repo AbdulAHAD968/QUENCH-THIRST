@@ -91,3 +91,14 @@ html, body {
 .profile-menu li:hover {
     background: #3e91e5d9;
 }
+
+.profile-menu ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.profile-menu ul li a {
+    text-decoration: none;
+    color: inherit;
+}
+  

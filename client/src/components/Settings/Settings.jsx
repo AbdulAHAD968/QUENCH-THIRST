@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import "./Settings.css";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -26,13 +28,16 @@ const Users = () => {
         });
   
         // Only keep users with role 'admin'
-        const customerUsers = (data || []).filter(user => user.role === "admin");
-        setUsers(customerUsers);
+        const adminUsers = (data || []).filter(user => user.role === "admin");
+        setUsers(adminUsers);
         setLoading(false);
+        toast.success("Admins loaded successfully");
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        const errorMsg = err.response?.data?.message || err.message;
+        setError(errorMsg);
         setLoading(false);
         setUsers([]);
+        toast.error(`Failed to load admins: ${errorMsg}`);
       }
     };
   
@@ -40,7 +45,7 @@ const Users = () => {
   }, []);  
 
   const deleteUser = async (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (window.confirm("Are you sure you want to delete this admin?")) {
       try {
         await axios.delete(`http://localhost:5000/api/users/${userId}`, {
           headers: {
@@ -48,8 +53,11 @@ const Users = () => {
           }
         });
         setUsers(users.filter((user) => user._id !== userId));
+        toast.success("Admin deleted successfully");
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        const errorMsg = err.response?.data?.message || err.message;
+        setError(errorMsg);
+        toast.error(`Failed to delete admin: ${errorMsg}`);
       }
     }
   };
@@ -69,7 +77,7 @@ const Users = () => {
 
     try {
       if (formMode === "edit") {
-        // Update existing user
+        // Update existing admin
         const { data } = await axios.put(
           `http://localhost:5000/api/users/${currentUserId}`,
           formData,
@@ -83,8 +91,9 @@ const Users = () => {
         setUsers(users.map((user) => 
           user._id === currentUserId ? data.user : user
         ));
-      } 
-      else{
+        toast.success("Admin updated successfully");
+      } else {
+        // Create new admin
         const { data } = await axios.post(
           "http://localhost:5000/api/users",
           formData,
@@ -96,10 +105,13 @@ const Users = () => {
           }
         );
         setUsers([...users, data.user]);
+        toast.success("Admin added successfully");
       }
       closeForm();
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      const errorMsg = err.response?.data?.message || err.message;
+      setError(errorMsg);
+      toast.error(`Operation failed: ${errorMsg}`);
     } 
     finally {
       setLoading(false);
@@ -113,8 +125,9 @@ const Users = () => {
       username: user.username,
       email: user.email,
       password: "",
-      role: user.role || "user"
+      role: user.role || "admin"
     });
+    toast.info("Editing admin...");
   };
 
   const openAddForm = () => {
@@ -126,18 +139,20 @@ const Users = () => {
       password: "",
       role: "admin"
     });
+    toast.info("Adding new admin...");
   };
 
   const closeForm = () => {
     setFormMode(null);
     setCurrentUserId(null);
     setError("");
+    toast.info("Operation cancelled");
   };
 
-  if (loading){
-    return <div className="loading">Loading users...</div>;
+  if (loading) {
+    return <div className="loading">Loading admins...</div>;
   }
-  if (error){
+  if (error) {
     return <div className="error">{error}</div>;
   }
 
@@ -162,7 +177,7 @@ const Users = () => {
           </thead>
           <tbody>
           {users
-            .filter((u) => u && u.username && u.email && u.role) // only valid users
+            .filter((u) => u && u.username && u.email && u.role)
             .map((user) => (
               <tr key={user._id}>
                 <td>{user.username}</td>
@@ -187,7 +202,7 @@ const Users = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="user-form-container">
-              <h2>{formMode === "edit" ? "Edit User" : "Add New User"}</h2>
+              <h2>{formMode === "edit" ? "Edit Admin" : "Add New Admin"}</h2>
               {error && <div className="error-message">{error}</div>}
               
               <form onSubmit={handleSubmit}>
@@ -233,6 +248,7 @@ const Users = () => {
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
+                    disabled
                   >
                     <option value="admin">Admin</option>
                   </select>

@@ -98,7 +98,7 @@ const StyledWelcomeContainer = styled.div`
     white-space: nowrap;
     overflow: hidden;
     border-right: 2px solid #3A86FF;
-    animation: typingReverse 4s linear infinite;
+    animation: typingReverse 5s linear infinite;
   }
 
   .loader {
@@ -170,7 +170,7 @@ const StyledWelcomeContainer = styled.div`
     background-color: #282828;
     right: -0.4%;
     border-radius: 6px;
-    animation: roadAnimation 1.6s linear infinite;
+    animation: roadAnimation 2s linear infinite;
     border-left: 20px solid #f8fafc;
   }
 
@@ -270,8 +270,8 @@ const StyledWelcomeContainer = styled.div`
     position: absolute;
     bottom: 0;
     right: -0.004%;
-    height: 250px;
-    animation: roadAnimation 1.6s linear infinite;
+    height: 350px;
+    animation: roadAnimation 2s linear infinite;
     z-index: 1;
     fill: #282828;
   }

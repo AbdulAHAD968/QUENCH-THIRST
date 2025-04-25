@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import "./Users.css";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -29,10 +31,13 @@ const Users = () => {
         const customerUsers = (data || []).filter(user => user.role === "customer");
         setUsers(customerUsers);
         setLoading(false);
+        toast.success("Customers loaded successfully");
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        const errorMsg = err.response?.data?.message || err.message;
+        setError(errorMsg);
         setLoading(false);
         setUsers([]);
+        toast.error(`Failed to load customers: ${errorMsg}`);
       }
     };
   
@@ -40,7 +45,7 @@ const Users = () => {
   }, []);  
 
   const deleteUser = async (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (window.confirm("Are you sure you want to delete this customer?")) {
       try {
         await axios.delete(`http://localhost:5000/api/users/${userId}`, {
           headers: {
@@ -48,8 +53,11 @@ const Users = () => {
           }
         });
         setUsers(users.filter((user) => user._id !== userId));
+        toast.success("Customer deleted successfully");
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        const errorMsg = err.response?.data?.message || err.message;
+        setError(errorMsg);
+        toast.error(`Failed to delete customer: ${errorMsg}`);
       }
     }
   };
@@ -83,6 +91,7 @@ const Users = () => {
         setUsers(users.map((user) => 
           user._id === currentUserId ? data.user : user
         ));
+        toast.success("Customer updated successfully");
       } else {
         // Create new user
         const { data } = await axios.post(
@@ -96,10 +105,13 @@ const Users = () => {
           }
         );
         setUsers([...users, data.user]);
+        toast.success("Customer added successfully");
       }
       closeForm();
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      const errorMsg = err.response?.data?.message || err.message;
+      setError(errorMsg);
+      toast.error(`Operation failed: ${errorMsg}`);
     } 
     finally {
       setLoading(false);
@@ -115,6 +127,7 @@ const Users = () => {
       password: "",
       role: user.role || "user"
     });
+    toast.info("Editing customer...");
   };
 
   const openAddForm = () => {
@@ -126,18 +139,20 @@ const Users = () => {
       password: "",
       role: "customer"
     });
+    toast.info("Adding new customer...");
   };
 
   const closeForm = () => {
     setFormMode(null);
     setCurrentUserId(null);
     setError("");
+    toast.info("Operation cancelled");
   };
 
-  if (loading){
+  if (loading) {
     return <div className="loading">Loading users...</div>;
   }
-  if (error){
+  if (error) {
     return <div className="error">{error}</div>;
   }
 

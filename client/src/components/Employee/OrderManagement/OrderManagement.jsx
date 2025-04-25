@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./Orders.css";
+import "./OrderManagement.css";
 
-const Orders = () => {
+const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -253,4 +253,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrderManagement;

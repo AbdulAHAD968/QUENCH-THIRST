@@ -65,7 +65,7 @@
 }
 
 /* Content Area */
-.content {
+.content-emp {
     flex: 1;
     margin-top: 70px; /* Space for fixed header */
     background: #ecf0f1;
@@ -74,7 +74,7 @@
     height: calc(100vh - 70px);
 }
 
-.dark .content {
+.dark .content-emp {
     background: #2c3e50;
     color: #ecf0f1;
 }

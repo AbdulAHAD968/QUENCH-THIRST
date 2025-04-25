@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { FaSun, FaMoon, FaBell, FaUserCircle } from "react-icons/fa";
+import { FaSun, FaMoon, FaUserCircle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import "./UserHeader.css";
 
 const UserHeader = ({ toggleTheme, isDarkMode }) => {
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-
-  const toggleNotificationMenu = () => {
-    setIsNotificationOpen(!isNotificationOpen);
-  };
+  const navigate = useNavigate();
 
   const toggleProfileMenu = () => {
     setIsProfileOpen(!isProfileOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/logout-animation");
   };
 
   return (
@@ -23,24 +25,15 @@ const UserHeader = ({ toggleTheme, isDarkMode }) => {
         <button className="theme-toggle" onClick={toggleTheme}>
           {isDarkMode ? <FaSun /> : <FaMoon />}
         </button>
-        <div className="notification-icon" onClick={toggleNotificationMenu}>
-          <FaBell />
-          {isNotificationOpen && (
-            <div className="notification-menu">
-              <ul>
-                <li>New order received</li>
-                <li>Feedback submitted</li>
-              </ul>
-            </div>
-          )}
-        </div>
         <div className="profile-icon" onClick={toggleProfileMenu}>
           <FaUserCircle />
           {isProfileOpen && (
             <div className="profile-menu">
               <ul>
-                <li>Settings</li>
-                <li>Logout</li>
+                <li>
+                  <Link to="/user-dashboard/settings">Settings</Link>
+                </li>
+                <li onClick={handleLogout}>Logout</li>
               </ul>
             </div>
           )}

@@ -3,9 +3,9 @@ import { FaStar, FaReply, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import "./Feedback.css";
+import "./ComplaintManagement.css";
 
-const Feedback = () => {
+const ComplaintManagement = () => {
   const [feedbackList, setFeedbackList] = useState([]);
   const [filter, setFilter] = useState("all");
   const [newResponse, setNewResponse] = useState("");
@@ -232,4 +232,4 @@ const Feedback = () => {
   );
 };
 
-export default Feedback;
+export default ComplaintManagement;

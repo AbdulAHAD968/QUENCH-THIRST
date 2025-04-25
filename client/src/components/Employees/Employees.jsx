@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaEdit, FaTrash, FaPlus, FaSave, FaTimes } from "react-icons/fa";
 import "./Employees.css";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -29,10 +31,13 @@ const Users = () => {
         const customerUsers = (data || []).filter(user => user.role === "employee");
         setUsers(customerUsers);
         setLoading(false);
+        toast.success("Employees loaded successfully");
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        const errorMsg = err.response?.data?.message || err.message;
+        setError(errorMsg);
         setLoading(false);
         setUsers([]);
+        toast.error(`Failed to load employees: ${errorMsg}`);
       }
     };
   
@@ -40,7 +45,7 @@ const Users = () => {
   }, []);  
 
   const deleteUser = async (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
+    if (window.confirm("Are you sure you want to delete this employee?")) {
       try {
         await axios.delete(`http://localhost:5000/api/users/${userId}`, {
           headers: {
@@ -48,8 +53,11 @@ const Users = () => {
           }
         });
         setUsers(users.filter((user) => user._id !== userId));
+        toast.success("Employee deleted successfully");
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        const errorMsg = err.response?.data?.message || err.message;
+        setError(errorMsg);
+        toast.error(`Failed to delete employee: ${errorMsg}`);
       }
     }
   };
@@ -83,8 +91,9 @@ const Users = () => {
         setUsers(users.map((user) => 
           user._id === currentUserId ? data.user : user
         ));
+        toast.success("Employee updated successfully");
       } 
-      else{
+      else {
         const { data } = await axios.post(
           "http://localhost:5000/api/users",
           formData,
@@ -96,10 +105,13 @@ const Users = () => {
           }
         );
         setUsers([...users, data.user]);
+        toast.success("Employee added successfully");
       }
       closeForm();
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      const errorMsg = err.response?.data?.message || err.message;
+      setError(errorMsg);
+      toast.error(`Operation failed: ${errorMsg}`);
     } 
     finally {
       setLoading(false);
@@ -115,6 +127,7 @@ const Users = () => {
       password: "",
       role: user.role || "user"
     });
+    toast.info("Editing employee...");
   };
 
   const openAddForm = () => {
@@ -126,18 +139,20 @@ const Users = () => {
       password: "",
       role: "employee"
     });
+    toast.info("Adding new employee...");
   };
 
   const closeForm = () => {
     setFormMode(null);
     setCurrentUserId(null);
     setError("");
+    toast.info("Operation cancelled");
   };
 
-  if (loading){
+  if (loading) {
     return <div className="loading">Loading users...</div>;
   }
-  if (error){
+  if (error) {
     return <div className="error">{error}</div>;
   }
 

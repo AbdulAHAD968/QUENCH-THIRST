@@ -25,7 +25,7 @@ const EmployeeSidebar = ({ isSidebarOpen, toggleSidebar }) => {
     { path: "/employee-dashboard", icon: <FaHome />, label: "Dashboard" },
     { path: "/employee-dashboard/orders", icon: <FaClipboardList />, label: "Order Management" },
     { path: "/employee-dashboard/deliveries", icon: <FaTruck />, label: "Deliveries" },
-    { path: "/employee-dashboard/complaints", icon: <FaExclamationTriangle />, label: "Complaints" },
+    { path: "/employee-dashboard/complaints", icon: <FaExclamationTriangle />, label: "FeedBack" },
     { path: "/employee-dashboard/performance", icon: <FaChartLine />, label: "Performance" },
     { path: "/employee-dashboard/settings", icon: <FaCog />, label: "Settings" },
   ];

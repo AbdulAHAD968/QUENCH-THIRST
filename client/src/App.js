@@ -35,7 +35,7 @@ const App = () => {
           element={isAuthenticated() ? <UserDashboard /> : <Navigate to="/auth" />}
         />
         <Route
-          path="/employee-dashboard"
+          path="/employee-dashboard/*"
           element={isEmployee() ? <EmployeeDashboard /> : <Navigate to="/auth" />}
         />
         <Route

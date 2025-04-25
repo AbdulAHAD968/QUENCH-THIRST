@@ -19,7 +19,6 @@
 
 .content {
     flex: 1;
-    /* padding: 20px; */
     background: #ecf0f1;
     overflow-y: auto;
 }
