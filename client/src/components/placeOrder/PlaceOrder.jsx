@@ -46,7 +46,7 @@ const PlaceOrder = () => {
     if (existingItem) {
       setCart(cart.map(item => 
         item.product === product._id 
-          ? { ...item, quantity: item.quantity + 1 } 
+          ? { ...item, quantity: item.quantity + 1 , totalPrice: (item.quantity + 1) * item.unitPrice } 
           : item
       ));
     } else {
@@ -340,6 +340,7 @@ const PlaceOrder = () => {
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 >
+                  <option value="a">Select Method!</option>
                   <option value="COD">Cash on Delivery</option>
                   <option value="Card">Credit/Debit Card</option>
                   <option value="Wallet">Mobile Wallet</option>

@@ -1,75 +1,183 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Bar, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from "chart.js";
+import { 
+  Chart as ChartJS, 
+  CategoryScale, 
+  LinearScale, 
+  BarElement, 
+  Title, 
+  Tooltip, 
+  Legend, 
+  ArcElement 
+} from "chart.js";
+import axios from "axios";
 import "./OrderHistory.css";
 
 // Register Chart.js components
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(
+  CategoryScale, 
+  LinearScale, 
+  BarElement, 
+  Title, 
+  Tooltip, 
+  Legend, 
+  ArcElement
+);
 
 const OrderHistory = () => {
-  const [timePeriod, setTimePeriod] = useState("weekly"); // weekly, monthly, yearly
+  
+  const [timePeriod, setTimePeriod] = useState("weekly");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [spendingData, setSpendingData] = useState(null);
+  const [orderedItemsData, setOrderedItemsData] = useState(null);
+  const [totalSales, setTotalSales] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0);
 
-  // Sample data for water spending
-  const waterSpendingData = {
-    weekly: {
-      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-      datasets: [
-        {
-          label: "Amount Spent (USD)",
-          data: [20, 30, 25, 40, 35, 50, 45],
-          backgroundColor: "#3C91E6",
-          borderColor: "#3C91E6",
-          borderWidth: 1,
-        },
-      ],
-    },
-    monthly: {
-      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-      datasets: [
-        {
-          label: "Amount Spent (USD)",
-          data: [150, 200, 180, 250, 220, 300],
-          backgroundColor: "#3C91E6",
-          borderColor: "#3C91E6",
-          borderWidth: 1,
-        },
-      ],
-    },
-    yearly: {
-      labels: ["2019", "2020", "2021", "2022", "2023"],
-      datasets: [
-        {
-          label: "Amount Spent (USD)",
-          data: [1200, 1500, 1800, 2000, 2200],
-          backgroundColor: "#3C91E6",
-          borderColor: "#3C91E6",
-          borderWidth: 1,
-        },
-      ],
-    },
+
+  useEffect(() => {
+    const fetchUserOrderHistory = async () => {
+      try {
+        setLoading(true);
+        const user = JSON.parse(localStorage.getItem('user'));
+  
+        const { data } = await axios.get('/api/orders', {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
+  
+        if (!Array.isArray(data)) {
+          throw new Error("Unexpected data format");
+        }
+  
+        // 🛠 Proper filtering
+        const filteredOrders = data.filter(order => order.user === user._id);
+  
+        // ✅ Use the filtered data
+        setOrders(filteredOrders);
+        setTotalOrders(filteredOrders.length);
+  
+        const total = filteredOrders.reduce((acc, order) => acc + (order.totalPrice || 0), 0);
+        setTotalSales(total);
+  
+        processChartData(filteredOrders);
+      }
+      catch (err) {
+        console.error("Error fetching user orders:", err);
+        setError(err.response?.data?.message || "Failed to load order history");
+      }
+      finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchUserOrderHistory();
+  }, []);  
+
+  const processChartData = (orders) => {
+    if (!orders || orders.length === 0) return;
+
+    // Process spending data by time period
+    const weeklyData = processDataByPeriod(orders, 'week');
+    const monthlyData = processDataByPeriod(orders, 'month');
+    const yearlyData = processDataByPeriod(orders, 'year');
+
+    setSpendingData({
+      weekly: weeklyData,
+      monthly: monthlyData,
+      yearly: yearlyData
+    });
+
+    // Process most ordered items
+    const itemsData = processOrderedItems(orders);
+    setOrderedItemsData(itemsData);
   };
 
-  // Sample data for most ordered item
-  const mostOrderedItemData = {
-    labels: ["Mineral Water", "Sparkling Water", "Flavored Water", "Distilled Water"],
-    datasets: [
-      {
+  const processDataByPeriod = (orders, period) => {
+    const periodMap = new Map();
+    const now = new Date();
+
+    orders.forEach(order => {
+      const orderDate = new Date(order.createdAt);
+      let periodKey;
+
+      if (period === 'week') {
+        // Group by week
+        const weekStart = new Date(orderDate);
+        weekStart.setDate(orderDate.getDate() - orderDate.getDay());
+        periodKey = weekStart.toISOString().split('T')[0];
+      } else if (period === 'month') {
+        // Group by month
+        periodKey = `${orderDate.getFullYear()}-${orderDate.getMonth()}`;
+      } else {
+        // Group by year
+        periodKey = orderDate.getFullYear().toString();
+      }
+
+      periodMap.set(periodKey, (periodMap.get(periodKey) || 0) + order.totalPrice);
+    });
+
+    // Sort periods chronologically
+    const sortedPeriods = Array.from(periodMap.entries()).sort((a, b) => {
+      if (period === 'year') return a[0] - b[0];
+      return new Date(a[0]) - new Date(b[0]);
+    });
+
+    // Format labels based on period
+    let labels;
+    if (period === 'week') {
+      labels = sortedPeriods.map(([date]) => {
+        const d = new Date(date);
+        return `Week of ${d.toLocaleDateString('default', { month: 'short', day: 'numeric' })}`;
+      });
+    } else if (period === 'month') {
+      labels = sortedPeriods.map(([key]) => {
+        const [year, month] = key.split('-');
+        return new Date(year, month).toLocaleDateString('default', { month: 'short', year: 'numeric' });
+      });
+    } else {
+      labels = sortedPeriods.map(([year]) => year);
+    }
+
+    return {
+      labels,
+      datasets: [{
+        label: "Amount Spent (Rs)",
+        data: sortedPeriods.map(([_, total]) => total),
+        backgroundColor: "#3C91E6",
+        borderColor: "#3C91E6",
+        borderWidth: 1,
+      }]
+    };
+  };
+
+  const processOrderedItems = (orders) => {
+    const itemMap = new Map();
+    
+    orders.forEach(order => {
+      order.orderItems.forEach(item => {
+        const itemName = item.name || `Product ${item.product}`;
+        itemMap.set(itemName, (itemMap.get(itemName) || 0) + item.quantity);
+      });
+    });
+
+    const sortedItems = Array.from(itemMap.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4); // Get top 4 items
+
+    return {
+      labels: sortedItems.map(([name]) => name),
+      datasets: [{
         label: "Quantity Ordered",
-        data: [120, 80, 60, 40],
+        data: sortedItems.map(([_, quantity]) => quantity),
         backgroundColor: ["#3C91E6", "#4CAF50", "#FF6384", "#FFCE56"],
         borderColor: ["#3C91E6", "#4CAF50", "#FF6384", "#FFCE56"],
         borderWidth: 1,
-      },
-    ],
+      }]
+    };
   };
-
-  // Sample order history table data
-  const orderHistory = [
-    { id: 1, date: "2023-10-01", item: "Mineral Water", quantity: 10, amount: 20 },
-    { id: 2, date: "2023-10-02", item: "Sparkling Water", quantity: 5, amount: 15 },
-    { id: 3, date: "2023-10-03", item: "Flavored Water", quantity: 8, amount: 24 },
-    { id: 4, date: "2023-10-04", item: "Distilled Water", quantity: 12, amount: 36 },
-  ];
 
   const handleTimePeriodChange = (period) => {
     setTimePeriod(period);
@@ -90,21 +198,31 @@ const OrderHistory = () => {
         enabled: true,
         mode: "index",
         intersect: false,
+        callbacks: {
+          label: function(context) {
+            return `Rs. ${context.parsed.y.toFixed(2)}`;
+          }
+        }
       },
     },
     scales: {
       x: {
         title: {
           display: true,
-          text: timePeriod === "weekly" ? "Day" : timePeriod === "monthly" ? "Month" : "Year",
+          text: timePeriod === "weekly" ? "Week" : timePeriod === "monthly" ? "Month" : "Year",
         },
       },
       y: {
         title: {
           display: true,
-          text: "Amount Spent (USD)",
+          text: "Amount Spent (Rs)",
         },
         beginAtZero: true,
+        ticks: {
+          callback: function(value) {
+            return `Rs. ${value}`;
+          }
+        }
       },
     },
   };
@@ -120,12 +238,37 @@ const OrderHistory = () => {
         display: true,
         text: "Most Ordered Items",
       },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return `${context.label}: ${context.raw} units`;
+          }
+        }
+      },
     },
   };
 
+  if (loading) return <div className="loading">Loading order history...</div>;
+  if (error) return <div className="error">{error}</div>;
+
   return (
     <div className="order-history">
-      <h2>Order History</h2>
+      <h2>Sales Analytics Dashboard</h2>
+      
+      <div className="sales-summary">
+        <div className="summary-card">
+          <h3>Total Sales</h3>
+          <p>${totalSales.toFixed(2)}</p>
+        </div>
+        <div className="summary-card">
+          <h3>Total Orders</h3>
+          <p>{totalOrders}</p>
+        </div>
+        <div className="summary-card">
+          <h3>Avg. Order Value</h3>
+          <p>${totalOrders > 0 ? (totalSales / totalOrders).toFixed(2) : 0}</p>
+        </div>
+      </div>
 
       {/* Time Period Toggle */}
       <div className="time-period-toggle">
@@ -149,39 +292,69 @@ const OrderHistory = () => {
         </button>
       </div>
 
-      {/* Water Spending Chart */}
-      <div className="chart-container">
-        <Bar data={waterSpendingData[timePeriod]} options={barChartOptions} />
-      </div>
+      {/* Spending Chart */}
+      {spendingData && (
+        <div className="chart-container">
+          <Bar data={spendingData[timePeriod]} options={barChartOptions} />
+        </div>
+      )}
 
-      {/* Most Ordered Item Pie Chart */}
-      <div className="chart-container">
-        <Pie data={mostOrderedItemData} options={pieChartOptions} />
-      </div>
+      {/* Ordered Items Pie Chart */}
+      {orderedItemsData && (
+        <div className="chart-container">
+          <Pie data={orderedItemsData} options={pieChartOptions} />
+        </div>
+      )}
 
       {/* Order History Table */}
       <div className="order-table">
-        <h3>Detailed Order History</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Item</th>
-              <th>Quantity</th>
-              <th>Amount (USD)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderHistory.map((order) => (
-              <tr key={order.id}>
-                <td>{order.date}</td>
-                <td>{order.item}</td>
-                <td>{order.quantity}</td>
-                <td>{order.amount}</td>
+        <h3>Order Details</h3>
+        {orders.length > 0 ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total (Rs)</th>
+                <th>Payment</th>
+                <th>Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order._id.substring(0, 8)}...</td>
+                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    {order.orderItems.map((item, idx) => (
+                      <div key={idx} className="order-item">
+                        <span>{item.name || `Product ${item.product}`}</span>
+                        <span>Qty: {item.quantity}</span>
+                        <span>Rs. {item.price * item.quantity}</span>
+                      </div>
+                    ))}
+                  </td>
+                  <td>Rs. {order.totalPrice.toFixed(2)}</td>
+                  <td>
+                    <span className={`payment-method ${order.paymentMethod.toLowerCase()}`}>
+                      {order.paymentMethod}
+                    </span>
+                    <br />
+                    {order.isPaid ? 'Paid' : 'Paid'}
+                  </td>
+                  <td>
+                    <span className={`status ${order.status.toLowerCase()}`}>
+                      {order.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No orders found</p>
+        )}
       </div>
     </div>
   );

@@ -2,12 +2,15 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    background: #d1d0d067;
+    border-radius: 16px;
 }
 
 .place-order-container h1 {
     text-align: center;
     margin-bottom: 30px;
-    color: #0080ff;
+    color: #1a5895;
+    text-decoration: underline;
 }
 
 .order-layout {
@@ -19,9 +22,11 @@
 .products-section h2,
 .cart-section h2 {
     margin-bottom: 20px;
-    color: #0b7ef2;
+    color: #165491;
     border-bottom: 2px solid #3498db;
     padding-bottom: 10px;
+    font-weight: bolder;
+    text-decoration: underline;
 }
 
 .product-grid {
