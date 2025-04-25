@@ -11,4 +11,8 @@
 <img src="./assets/11.PNG" alt="The cover image">
 <img src="./assets/12.PNG" alt="The cover image">
 <img src="./assets/14.PNG" alt="The cover image">
+<img src="./assets/15.PNG" alt="The cover image">
+<img src="./assets/16.PNG" alt="The cover image">
+<img src="./assets/17.PNG" alt="The cover image">
+<img src="./assets/18.PNG" alt="The cover image">
 <img src="./assets/13.PNG" alt="The cover image">
