@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Order = require('../models/Order');
+const User = require('../models/user');
 
 
 const createOrder = asyncHandler(async (req, res) => {
@@ -92,8 +93,28 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 });
 
 const getUserOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
-  res.json(orders);
+  // Verify authentication
+  if (!req.user?._id) {
+    res.status(401);
+    throw new Error('Not authorized, please login');
+  }
+
+  // Verify the user exists
+  const userExists = await User.findById(req.user._id);
+  if (!userExists) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // Get orders with proper population
+  const orders = await Order.find({ user: req.user._id })
+    .sort('-createdAt')
+    .populate({
+      path: 'orderItems.product',
+      select: 'name price image'
+    });
+
+  res.status(200).json(orders);
 });
 
 const getAllOrders = asyncHandler(async (req, res) => {

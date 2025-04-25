@@ -10,6 +10,13 @@ const orderRoutes = require('./routes/orderRoutes');
 const app = express();
 const PORT = 5000;
 
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+
+
 // Middleware
 app.use(cors());
 app.use(express.json());
