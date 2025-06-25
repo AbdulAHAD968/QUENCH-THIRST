@@ -2,9 +2,8 @@
 # Quench&nbsp;Thirst  
 *A real-time water-tank monitoring & dispatch platform*
 
-[![Build](https://img.shields.io/github/actions/workflow/status/your-org/quench-thirst/ci.yml?label=build)](../../actions) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) 
-[![Open Issues](https://img.shields.io/github/issues/your-org/quench-thirst.svg)](../../issues) 
+[![Open Issues](https://img.shields.io/github/issues/AbdulAHAD968/QUENCH-THIRST.svg)](../../issues) 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > Digital logistics and automatic control for municipal water tanks.
