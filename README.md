@@ -52,7 +52,7 @@ The stack is familiar—**Node.js &nbsp;|&nbsp; Express &nbsp;|&nbsp; MongoDB &n
 
 ---
 
-## Screenshots
+## Gallery
 | View | Preview |
 |------|---------|
 | Login Page | ![Quench Thirst login](./assets/1.PNG) |
